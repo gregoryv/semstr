@@ -4,7 +4,7 @@ Package semstr provides semantic version parse and compare funcs.
 Version format is defined by https://semver.org/. However the
 parsing in this package allows for some common variations.
 
-	[v]MAJOR[.MINOR][.PATCH][-PRERELEASE]
+	[v]MAJOR[.MINOR[.PATCH[-PRERELEASE][+BUILD]]]
 
 E.g. v1 or 1.0 are both parsed as 1.0.0.
 */
@@ -103,7 +103,16 @@ func Parse(in string) (*Version, error) {
 	if err != nil {
 		return nil, err
 	}
-	v.PreRelease = in[i+1:]
+
+	// optional pre-release
+	in = in[i+1:]
+	i = strings.Index(in, "+")
+	if i == -1 {
+		v.PreRelease = in
+		return &v, nil
+	}
+	v.PreRelease = in[:i]
+	v.Build = in[i+1:]
 	return &v, nil
 }
 
@@ -119,6 +128,7 @@ type Version struct {
 	Patch int
 
 	PreRelease string
+	Build      string
 }
 
 func (v *Version) String() string {
@@ -126,6 +136,9 @@ func (v *Version) String() string {
 	res = fmt.Append(res, v.Major, ".", v.Minor, ".", v.Patch)
 	if len(v.PreRelease) > 0 {
 		res = fmt.Append(res, "-", v.PreRelease)
+	}
+	if len(v.Build) > 0 {
+		res = fmt.Append(res, "+", v.Build)
 	}
 	return string(res)
 }

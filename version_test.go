@@ -12,6 +12,7 @@ func ExampleMustParse() {
 		"1.8.0",
 		"1.0",
 		"2.93.144-beta",
+		"2.3.0-alpha+SHA123",
 	}
 	for _, v := range valid {
 		MustParse(v)
@@ -39,13 +40,12 @@ func ExampleCompare() {
 }
 
 func ExampleVersion_String() {
-	v := Version{1, 9, 11, ""}
-	fmt.Println(v.String())
-	v.PreRelease = "dev"
+	v := MustParse("1.9.11-dev+SHA123")
+	fmt.Println(v.Major, v.Minor, v.Patch, v.PreRelease, v.Build)
 	fmt.Println(v.String())
 	// output:
-	// 1.9.11
-	// 1.9.11-dev
+	// 1 9 11 dev SHA123
+	// 1.9.11-dev+SHA123
 }
 
 func TestParse(t *testing.T) {
