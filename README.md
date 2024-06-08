@@ -1,13 +1,16 @@
-semstr - Go package for parsing and comparing [semantic version](https://semver.org) like strings
+[semstr](https://pkg.go.dev/github.com/gregoryv/semstr) - Go package for parsing and comparing [semantic version](https://semver.org) like strings
 
-Allowed format is less stringent than semantic versioning to
-accomodate more usecases.
+Format is less stringent than semantic versioning to
+accommodate more usecases.
 
     [v]MAJOR[.MINOR[.PATCH[-PRERELEASE][+BUILD]]]
 
 
-## Quick use
+## Quick start
 
-    go get [github.com/gregoryv/semstr](https://pkg.go.dev/github.com/gregoryv/semstr)
+    go get github.com/gregoryv/semstr
 
 
+Alternative similar package is
+
+- https://pkg.go.dev/golang.org/x/mod/semver
