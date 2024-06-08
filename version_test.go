@@ -3,8 +3,6 @@ package semstr
 import (
 	"fmt"
 	"testing"
-
-	"golang.org/x/mod/semver"
 )
 
 func ExampleMustParse() {
@@ -107,13 +105,6 @@ func TestCompare(t *testing.T) {
 func BenchmarkParse(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		Parse("1.342.12-dev")
-	}
-}
-
-func Benchmark_semverIsValid(b *testing.B) {
-	// IsValid parses the string under the hood
-	for i := 0; i < b.N; i++ {
-		semver.IsValid("1.342.12-dev")
 	}
 }
 
