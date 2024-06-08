@@ -10,30 +10,30 @@ import (
 )
 
 func Compare(a, b string) int {
-	v := MustParseVersion(a)
-	o := MustParseVersion(b)
+	v := MustParse(a)
+	o := MustParse(b)
 	return v.Compare(o)
 }
 
 // Less is the same as Compare(v,o) < 0, panics if the versions are
 // badly formatted.
 func Less(a, b string) bool {
-	v := MustParseVersion(a)
-	o := MustParseVersion(b)
+	v := MustParse(a)
+	o := MustParse(b)
 	return v.Compare(o) < 0
 }
 
-// MustParseVersion returns a valid version or panics.
-func MustParseVersion(in string) *Version {
-	v, err := ParseVersion(in)
+// MustParse returns a valid version or panics.
+func MustParse(in string) *Version {
+	v, err := Parse(in)
 	if err != nil {
 		panic(err.Error())
 	}
 	return v
 }
 
-// ParseVersion returns a valid sematic version or an error.
-func ParseVersion(in string) (*Version, error) {
+// Parse returns a valid sematic version or an error.
+func Parse(in string) (*Version, error) {
 	if len(in) == 0 {
 		return nil, fmt.Errorf("empty")
 	}

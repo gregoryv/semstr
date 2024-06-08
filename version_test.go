@@ -16,19 +16,19 @@ func ExampleVersion_String() {
 }
 
 func ExampleParseVersion() {
-	fmt.Println(MustParseVersion("1.8.0"))
-	fmt.Println(MustParseVersion("1.0"))
-	fmt.Println(MustParseVersion("2.93.144-beta"))
+	fmt.Println(MustParse("1.8.0"))
+	fmt.Println(MustParse("1.0"))
+	fmt.Println(MustParse("2.93.144-beta"))
 	// output:
 	// 1.8.0
 	// 1.0.0
 	// 2.93.144-beta
 }
 
-func TestParseVersion(t *testing.T) {
+func TestParse(t *testing.T) {
 	bad := func(in string) {
 		t.Helper()
-		_, err := ParseVersion(in)
+		_, err := Parse(in)
 		if err == nil {
 			t.Errorf("%s: expect error", in)
 		}
@@ -53,14 +53,14 @@ func TestVersion_Less(t *testing.T) {
 	ok("0.3.5-dev", "0.3.5")
 }
 
-func TestMustParseVersion_panics(t *testing.T) {
+func TestMustParse_panics(t *testing.T) {
 	defer func() {
 		e := recover()
 		if e == nil {
 			t.Fail()
 		}
 	}()
-	MustParseVersion("abc")
+	MustParse("abc")
 }
 
 func TestVersion_Compare(t *testing.T) {
@@ -80,15 +80,15 @@ func TestVersion_Compare(t *testing.T) {
 	ok(1, "1.0.1-rc2", "1.0.1-rc1")
 }
 
-func BenchmarkParseVersion(b *testing.B) {
+func BenchmarkParse(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		ParseVersion("1.342.12-dev")
+		Parse("1.342.12-dev")
 	}
 }
 
 func BenchmarkCompare(b *testing.B) {
-	v := MustParseVersion("1.342.12-dev")
-	o := MustParseVersion("1.342.0")
+	v := MustParse("1.342.12-dev")
+	o := MustParse("1.342.0")
 	for i := 0; i < b.N; i++ {
 		v.Compare(o)
 	}
