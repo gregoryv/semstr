@@ -1,7 +1,7 @@
 /*
-Package sem provides semantic version parse and compare funcs.
+Package semver provides semantic version parse and compare funcs.
 */
-package sem
+package semver
 
 import (
 	"fmt"
