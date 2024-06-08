@@ -1,5 +1,9 @@
 /*
 Package semver provides semantic version parse and compare funcs.
+
+Version format is defined as
+
+	MAJOR[.MINOR][.PATCH][-TEXT]
 */
 package semver
 

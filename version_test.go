@@ -5,6 +5,18 @@ import (
 	"testing"
 )
 
+func ExampleMustParse() {
+	valid := []string{
+		"1.8.0",
+		"1.0",
+		"2.93.144-beta",
+	}
+	for _, v := range valid {
+		MustParse(v)
+	}
+	// output:
+}
+
 func ExampleCompare() {
 	cmp := func(a, b string) {
 		op := map[int]string{
@@ -32,16 +44,6 @@ func ExampleVersion_String() {
 	// output:
 	// 1.9.11
 	// 1.9.11-dev
-}
-
-func ExampleMustParse() {
-	fmt.Println(MustParse("1.8.0"))
-	fmt.Println(MustParse("1.0"))
-	fmt.Println(MustParse("2.93.144-beta"))
-	// output:
-	// 1.8.0
-	// 1.0.0
-	// 2.93.144-beta
 }
 
 func TestParse(t *testing.T) {
