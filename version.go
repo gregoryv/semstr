@@ -6,10 +6,10 @@ import (
 	"strings"
 )
 
-func Scompare(a, b string) int {
-	A := MustParseVersion(a)
-	B := MustParseVersion(b)
-	return Compare(A, B)
+func Compare(a, b string) int {
+	v := MustParseVersion(a)
+	o := MustParseVersion(b)
+	return v.Compare(o)
 }
 
 // Sless is the same as Less, panics if the versions are badly
@@ -22,7 +22,7 @@ func Sless(a, b string) bool {
 
 // Less is the same as Compare(v,o) < 0
 func Less(v, o *Version) bool {
-	return Compare(v, o) < 0
+	return v.Compare(o) < 0
 }
 
 // MustParseVersion returns a valid version or panics.
@@ -84,15 +84,6 @@ func ParseVersion(in string) (*Version, error) {
 	return &v, nil
 }
 
-// Compare returns
-//
-//	 1, v > o
-//	 0, v == o
-//	-1, v < o
-func Compare(v, o *Version) int {
-	return v.Compare(o)
-}
-
 // numEqual returns true if major, minor and patch fields are
 // equal.
 func numEqual(v, o *Version) bool {
@@ -114,6 +105,11 @@ func (v *Version) String() string {
 	return fmt.Sprintf("%v.%v.%v", v.Major, v.Minor, v.Patch)
 }
 
+// Compare returns
+//
+//	 1, v > o
+//	 0, v == o
+//	-1, v < o
 func (v *Version) Compare(o *Version) int {
 	// equal
 	if numEqual(v, o) && v.Text == o.Text {

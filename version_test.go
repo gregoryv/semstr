@@ -66,7 +66,7 @@ func TestMustParseVersion_panics(t *testing.T) {
 func TestVersion_Compare(t *testing.T) {
 	ok := func(exp int, a, b string) {
 		t.Helper()
-		got := Scompare(a, b)
+		got := Compare(a, b)
 		if got != exp {
 			t.Error(got, a, b, "expected", exp)
 		}
@@ -90,6 +90,6 @@ func BenchmarkCompare(b *testing.B) {
 	v := MustParseVersion("1.342.12-dev")
 	o := MustParseVersion("1.342.0")
 	for i := 0; i < b.N; i++ {
-		Compare(v, o)
+		v.Compare(o)
 	}
 }
