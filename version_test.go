@@ -12,7 +12,8 @@ func ExampleCompare() {
 			0:  "=",
 			1:  ">",
 		}
-		fmt.Printf("%s %s %s\n", a, op[Compare(a, b)], b)
+		got, _ := Compare(a, b)
+		fmt.Printf("%s %s %s\n", a, op[got], b)
 	}
 	cmp("1.0", "0.9")
 	cmp("0.1", "0.2")
@@ -60,31 +61,15 @@ func TestParse(t *testing.T) {
 	bad("x.0.0")
 }
 
-func TestVersion_Less(t *testing.T) {
-	ok := func(a, b string) {
-		t.Helper()
-		if !Less(a, b) {
-			t.Errorf("%s < %s", a, b)
-		}
-	}
-	ok("0.3.5", "1.0.0")
-	ok("0.3.5-dev", "0.3.5")
-}
-
 func TestMustParse_panics(t *testing.T) {
-	defer func() {
-		e := recover()
-		if e == nil {
-			t.Fail()
-		}
-	}()
+	defer catchPanic(t)
 	MustParse("abc")
 }
 
-func TestVersion_Compare(t *testing.T) {
+func TestMustCompare(t *testing.T) {
 	ok := func(exp int, a, b string) {
 		t.Helper()
-		got := Compare(a, b)
+		got := MustCompare(a, b)
 		if got != exp {
 			t.Error(got, a, b, "expected", exp)
 		}
@@ -96,6 +81,21 @@ func TestVersion_Compare(t *testing.T) {
 	ok(1, "1.0.1", "1.0.1-beta")
 	ok(1, "1.0.1-beta", "1.0.1-alpha")
 	ok(1, "1.0.1-rc2", "1.0.1-rc1")
+
+	defer catchPanic(t)
+	MustCompare("1.a.0", "1.0")
+}
+
+func TestCompare(t *testing.T) {
+	bad := func(a, b string) {
+		t.Helper()
+		_, err := Compare(a, b)
+		if err == nil {
+			t.Errorf("Compare(%q, %q), expect error", a, b)
+		}
+	}
+	bad("1.b.0", "1.0")
+	bad("1.0", "1.c.0")
 }
 
 func BenchmarkParse(b *testing.B) {
@@ -109,5 +109,11 @@ func BenchmarkCompare(b *testing.B) {
 	o := MustParse("1.342.0")
 	for i := 0; i < b.N; i++ {
 		v.Compare(o)
+	}
+}
+
+func catchPanic(t *testing.T) {
+	if err := recover(); err == nil {
+		t.Fail()
 	}
 }

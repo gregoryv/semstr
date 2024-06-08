@@ -9,18 +9,28 @@ import (
 	"strings"
 )
 
-func Compare(a, b string) int {
-	v := MustParse(a)
-	o := MustParse(b)
-	return v.Compare(o)
+func MustCompare(a, b string) int {
+	v, err := Compare(a, b)
+	if err != nil {
+		panic(err.Error())
+	}
+	return v
 }
 
-// Less is the same as Compare(v,o) < 0, panics if the versions are
-// badly formatted.
-func Less(a, b string) bool {
-	v := MustParse(a)
-	o := MustParse(b)
-	return v.Compare(o) < 0
+// Compare returns -1, 0 or 1. If a parsing error occurs it returns 0
+// and a non nil error.
+func Compare(a, b string) (int, error) {
+	v, err := Parse(a)
+	if err != nil {
+		return 0, err
+	}
+
+	o, err := Parse(b)
+	if err != nil {
+		return 0, err
+	}
+
+	return v.Compare(o), nil
 }
 
 // MustParse returns a valid version or panics.
