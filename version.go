@@ -3,7 +3,7 @@ Package semver provides semantic version parse and compare funcs.
 
 Version format is defined as
 
-	MAJOR[.MINOR][.PATCH][-TEXT]
+	[v]MAJOR[.MINOR][.PATCH][-TEXT]
 */
 package semver
 
@@ -53,6 +53,9 @@ func Parse(in string) (*Version, error) {
 	}
 	var v Version
 	var err error
+	if in[0] == 'v' {
+		in = in[1:]
+	}
 	// major
 	i := strings.Index(in, ".")
 	if i == -1 {

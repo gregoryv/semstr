@@ -7,6 +7,7 @@ import (
 
 func ExampleMustParse() {
 	valid := []string{
+		"v1",
 		"1",
 		"1.8.0",
 		"1.0",
