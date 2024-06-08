@@ -41,7 +41,7 @@ func ExampleCompare() {
 func ExampleVersion_String() {
 	v := Version{1, 9, 11, ""}
 	fmt.Println(v.String())
-	v.Text = "dev"
+	v.PreRelease = "dev"
 	fmt.Println(v.String())
 	// output:
 	// 1.9.11

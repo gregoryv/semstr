@@ -1,9 +1,12 @@
 /*
 Package semstr provides semantic version parse and compare funcs.
 
-Version format is defined as
+Version format is defined by https://semver.org/. However the
+parsing in this package allows for some common variations.
 
-	[v]MAJOR[.MINOR][.PATCH][-TEXT]
+	[v]MAJOR[.MINOR][.PATCH][-PRERELEASE]
+
+E.g. v1 or 1.0 are both parsed as 1.0.0.
 */
 package semstr
 
@@ -100,7 +103,7 @@ func Parse(in string) (*Version, error) {
 	if err != nil {
 		return nil, err
 	}
-	v.Text = in[i+1:]
+	v.PreRelease = in[i+1:]
 	return &v, nil
 }
 
@@ -115,14 +118,14 @@ type Version struct {
 	Minor int
 	Patch int
 
-	Text string
+	PreRelease string
 }
 
 func (v *Version) String() string {
 	var res []byte
 	res = fmt.Append(res, v.Major, ".", v.Minor, ".", v.Patch)
-	if len(v.Text) > 0 {
-		res = fmt.Append(res, "-", v.Text)
+	if len(v.PreRelease) > 0 {
+		res = fmt.Append(res, "-", v.PreRelease)
 	}
 	return string(res)
 }
@@ -134,7 +137,7 @@ func (v *Version) String() string {
 //	-1, v < o
 func (v *Version) Compare(o *Version) int {
 	// equal
-	if numEqual(v, o) && v.Text == o.Text {
+	if numEqual(v, o) && v.PreRelease == o.PreRelease {
 		return 0
 	}
 	if v.Major > o.Major {
@@ -146,10 +149,10 @@ func (v *Version) Compare(o *Version) int {
 	if v.Major == o.Major && v.Minor == o.Minor && v.Patch > o.Patch {
 		return 1
 	}
-	if numEqual(v, o) && len(v.Text) == 0 && len(o.Text) > 0 {
+	if numEqual(v, o) && len(v.PreRelease) == 0 && len(o.PreRelease) > 0 {
 		return 1
 	}
-	if numEqual(v, o) && len(v.Text) > 0 && len(o.Text) > 0 && v.Text > o.Text {
+	if numEqual(v, o) && len(v.PreRelease) > 0 && len(o.PreRelease) > 0 && v.PreRelease > o.PreRelease {
 		return 1
 	}
 	return -1
