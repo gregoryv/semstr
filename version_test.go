@@ -5,6 +5,24 @@ import (
 	"testing"
 )
 
+func ExampleCompare() {
+	cmp := func(a, b string) {
+		op := map[int]string{
+			-1: "<",
+			0:  "=",
+			1:  ">",
+		}
+		fmt.Printf("%s %s %s\n", a, op[Compare(a, b)], b)
+	}
+	cmp("1.0", "0.9")
+	cmp("0.1", "0.2")
+	cmp("2.0", "2.0")
+	// output:
+	// 1.0 > 0.9
+	// 0.1 < 0.2
+	// 2.0 = 2.0
+}
+
 func ExampleVersion_String() {
 	v := Version{1, 9, 11, ""}
 	fmt.Println(v.String())
@@ -15,7 +33,7 @@ func ExampleVersion_String() {
 	// 1.9.11-dev
 }
 
-func ExampleParseVersion() {
+func ExampleMustParse() {
 	fmt.Println(MustParse("1.8.0"))
 	fmt.Println(MustParse("1.0"))
 	fmt.Println(MustParse("2.93.144-beta"))

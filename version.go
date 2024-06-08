@@ -97,10 +97,12 @@ type Version struct {
 }
 
 func (v *Version) String() string {
+	var res []byte
+	res = fmt.Append(res, v.Major, ".", v.Minor, ".", v.Patch)
 	if len(v.Text) > 0 {
-		return fmt.Sprintf("%v.%v.%v-%s", v.Major, v.Minor, v.Patch, v.Text)
+		res = fmt.Append(res, "-", v.Text)
 	}
-	return fmt.Sprintf("%v.%v.%v", v.Major, v.Minor, v.Patch)
+	return string(res)
 }
 
 // Compare returns
