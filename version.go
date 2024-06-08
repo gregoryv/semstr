@@ -1,11 +1,11 @@
 /*
-Package semver provides semantic version parse and compare funcs.
+Package semstr provides semantic version parse and compare funcs.
 
 Version format is defined as
 
 	[v]MAJOR[.MINOR][.PATCH][-TEXT]
 */
-package semver
+package semstr
 
 import (
 	"fmt"

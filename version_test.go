@@ -1,4 +1,4 @@
-package semver
+package semstr
 
 import (
 	"fmt"

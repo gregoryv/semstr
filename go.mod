@@ -1,3 +1,3 @@
-module github.com/gregoryv/semver
+module github.com/gregoryv/semstr
 
 go 1.22.2
