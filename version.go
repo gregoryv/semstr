@@ -1,3 +1,6 @@
+/*
+Package sem provides semantic version parse and compare funcs.
+*/
 package sem
 
 import (
@@ -12,16 +15,11 @@ func Compare(a, b string) int {
 	return v.Compare(o)
 }
 
-// Sless is the same as Less, panics if the versions are badly
-// formatted.
-func Sless(a, b string) bool {
-	A := MustParseVersion(a)
-	B := MustParseVersion(b)
-	return Less(A, B)
-}
-
-// Less is the same as Compare(v,o) < 0
-func Less(v, o *Version) bool {
+// Less is the same as Compare(v,o) < 0, panics if the versions are
+// badly formatted.
+func Less(a, b string) bool {
+	v := MustParseVersion(a)
+	o := MustParseVersion(b)
 	return v.Compare(o) < 0
 }
 

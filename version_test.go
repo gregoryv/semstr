@@ -45,7 +45,7 @@ func TestParseVersion(t *testing.T) {
 func TestVersion_Less(t *testing.T) {
 	ok := func(a, b string) {
 		t.Helper()
-		if !Sless(a, b) {
+		if !Less(a, b) {
 			t.Errorf("%s < %s", a, b)
 		}
 	}
