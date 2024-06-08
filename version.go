@@ -52,12 +52,17 @@ func Parse(in string) (*Version, error) {
 		return nil, fmt.Errorf("empty")
 	}
 	var v Version
+	var err error
 	// major
 	i := strings.Index(in, ".")
 	if i == -1 {
-		return nil, fmt.Errorf("missing dot")
+		v.Major, err = strconv.Atoi(in)
+		if err != nil {
+			return nil, err
+		}
+		return &v, nil
 	}
-	var err error
+
 	v.Major, err = strconv.Atoi(in[:i])
 	if err != nil {
 		return nil, err

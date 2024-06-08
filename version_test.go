@@ -7,6 +7,7 @@ import (
 
 func ExampleMustParse() {
 	valid := []string{
+		"1",
 		"1.8.0",
 		"1.0",
 		"2.93.144-beta",
@@ -55,7 +56,6 @@ func TestParse(t *testing.T) {
 		}
 	}
 	bad("")
-	bad("1")
 	bad("1.x")
 	bad("1.x.0")
 	bad("1.0.x")
