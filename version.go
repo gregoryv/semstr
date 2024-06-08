@@ -6,6 +6,25 @@ import (
 	"strings"
 )
 
+func Scompare(a, b string) int {
+	A := MustParseVersion(a)
+	B := MustParseVersion(b)
+	return Compare(A, B)
+}
+
+// Sless is the same as Less, panics if the versions are badly
+// formatted.
+func Sless(a, b string) bool {
+	A := MustParseVersion(a)
+	B := MustParseVersion(b)
+	return Less(A, B)
+}
+
+// Less is the same as Compare(v,o) < 0
+func Less(v, o *Version) bool {
+	return Compare(v, o) < 0
+}
+
 // MustParseVersion returns a valid version or panics.
 func MustParseVersion(in string) *Version {
 	v, err := ParseVersion(in)
@@ -65,17 +84,13 @@ func ParseVersion(in string) (*Version, error) {
 	return &v, nil
 }
 
-// Sless returns true if version a is considered to be less than b.
-func Sless(a, b string) bool {
-	A := MustParseVersion(a)
-	B := MustParseVersion(b)
-	return Less(A, B)
-}
-
-// Less returns true if version v is considered to come before version
-// o.
-func Less(v, o *Version) bool {
-	return Compare(v, o) < 0
+// Compare returns
+//
+//	 1, v > o
+//	 0, v == o
+//	-1, v < o
+func Compare(v, o *Version) int {
+	return v.Compare(o)
 }
 
 // numEqual returns true if major, minor and patch fields are
@@ -84,13 +99,22 @@ func numEqual(v, o *Version) bool {
 	return v.Major == o.Major && v.Minor == o.Minor && v.Patch == o.Patch
 }
 
-func Scompare(a, b string) int {
-	A := MustParseVersion(a)
-	B := MustParseVersion(b)
-	return Compare(A, B)
+type Version struct {
+	Major int
+	Minor int
+	Patch int
+
+	Text string
 }
 
-func Compare(v, o *Version) int {
+func (v *Version) String() string {
+	if len(v.Text) > 0 {
+		return fmt.Sprintf("%v.%v.%v-%s", v.Major, v.Minor, v.Patch, v.Text)
+	}
+	return fmt.Sprintf("%v.%v.%v", v.Major, v.Minor, v.Patch)
+}
+
+func (v *Version) Compare(o *Version) int {
 	// equal
 	if numEqual(v, o) && v.Text == o.Text {
 		return 0
@@ -111,19 +135,4 @@ func Compare(v, o *Version) int {
 		return 1
 	}
 	return -1
-}
-
-type Version struct {
-	Major int
-	Minor int
-	Patch int
-
-	Text string
-}
-
-func (v *Version) String() string {
-	if len(v.Text) > 0 {
-		return fmt.Sprintf("%v.%v.%v-%s", v.Major, v.Minor, v.Patch, v.Text)
-	}
-	return fmt.Sprintf("%v.%v.%v", v.Major, v.Minor, v.Patch)
 }
