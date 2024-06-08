@@ -3,6 +3,7 @@
 This project adheres to semantic versioning and all major
 changes will be noted in this file.
 
+## [0.2.1] 2024-06-08
 ## [0.2.0] 2024-06-08
 
 - Added field Version.Build
