@@ -10,6 +10,7 @@ accommodate more usecases.
 
     go get github.com/gregoryv/semstr
 
+See [package examples](https://pkg.go.dev/github.com/gregoryv/semstr#pkg-examples)
 
 Alternative similar package is
 
