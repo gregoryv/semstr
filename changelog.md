@@ -3,6 +3,10 @@
 This project adheres to semantic versioning and all major
 changes will be noted in this file.
 
+## [0.4.0-dev]
+
+- Change Version.Major, Minor and Patch to type uint
+
 ## [0.3.0] 2024-06-09
 
 - Improve Parse errors

@@ -11,6 +11,7 @@ E.g. v1 or 1.0 are both parsed as 1.0.0.
 package semstr
 
 import (
+	"errors"
 	"fmt"
 	"strconv"
 	"strings"
@@ -56,53 +57,45 @@ func Parse(str string) (*Version, error) {
 		return nil, &parseErr{str, "empty"}
 	}
 	var v Version
-	var err error
 	if in[0] == 'v' {
 		in = in[1:]
 	}
 	// major
 	i := strings.Index(in, ".")
 	if i == -1 {
-		v.Major, err = strconv.Atoi(in)
-		if err != nil {
-			return nil, &parseErr{str, "major invalid"}
+		if err := v.setMajor(in); err != nil {
+			return nil, &parseErr{str, err.Error()}
 		}
 		return &v, nil
 	}
-
-	v.Major, err = strconv.Atoi(in[:i])
-	if err != nil {
-		return nil, &parseErr{str, "major invalid"}
+	if err := v.setMajor(in[:i]); err != nil {
+		return nil, &parseErr{str, err.Error()}
 	}
 
 	// optional minor
 	in = in[i+1:]
 	i = strings.Index(in, ".")
 	if i == -1 {
-		v.Minor, err = strconv.Atoi(in)
-		if err != nil {
-			return nil, &parseErr{str, "minor invalid"}
+		if err := v.setMinor(in); err != nil {
+			return nil, &parseErr{str, err.Error()}
 		}
 		return &v, nil
 	}
-	v.Minor, err = strconv.Atoi(in[:i])
-	if err != nil {
-		return nil, &parseErr{str, "minor invalid"}
+	if err := v.setMinor(in[:i]); err != nil {
+		return nil, &parseErr{str, err.Error()}
 	}
 
 	// optional patch
 	in = in[i+1:]
 	i = strings.Index(in, "-")
 	if i == -1 {
-		v.Patch, err = strconv.Atoi(in)
-		if err != nil {
-			return nil, &parseErr{str, "patch invalid"}
+		if err := v.setPatch(in); err != nil {
+			return nil, &parseErr{str, err.Error()}
 		}
 		return &v, nil
 	}
-	v.Patch, err = strconv.Atoi(in[:i])
-	if err != nil {
-		return nil, &parseErr{str, "patch invalid"}
+	if err := v.setPatch(in[:i]); err != nil {
+		return nil, &parseErr{str, err.Error()}
 	}
 
 	// optional pre-release
@@ -135,12 +128,39 @@ func numEqual(v, o *Version) bool {
 }
 
 type Version struct {
-	Major int
-	Minor int
-	Patch int
+	Major uint
+	Minor uint
+	Patch uint
 
 	PreRelease string
 	Build      string
+}
+
+func (v *Version) setMajor(str string) error {
+	n, err := strconv.Atoi(str)
+	if err != nil || n < 0 {
+		return errors.New("major invalid")
+	}
+	v.Major = uint(n)
+	return nil
+}
+
+func (v *Version) setMinor(str string) error {
+	n, err := strconv.Atoi(str)
+	if err != nil || n < 0 {
+		return errors.New("minor invalid")
+	}
+	v.Minor = uint(n)
+	return nil
+}
+
+func (v *Version) setPatch(str string) error {
+	n, err := strconv.Atoi(str)
+	if err != nil || n < 0 {
+		return errors.New("minor invalid")
+	}
+	v.Patch = uint(n)
+	return nil
 }
 
 func (v *Version) String() string {
@@ -184,10 +204,10 @@ func (v *Version) Compare(o *Version) int {
 }
 
 type parseErr struct {
-	str  string
-	part string // major, minor or patch
+	str string
+	msg string // major, minor or patch
 }
 
 func (e *parseErr) Error() string {
-	return fmt.Sprintf("Parse(%q): %s", e.str, e.part)
+	return fmt.Sprintf("Parse(%q): %s", e.str, e.msg)
 }
