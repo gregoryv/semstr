@@ -197,10 +197,12 @@ func (v *Version) Compare(o *Version) int {
 	if v.Major == o.Major && v.Minor == o.Minor && v.Patch > o.Patch {
 		return 1
 	}
+	// no pre-release comes after any pre-release
 	if numEqual(v, o) && len(v.PreRelease) == 0 && len(o.PreRelease) > 0 {
 		return 1
 	}
-	if numEqual(v, o) && len(v.PreRelease) > 0 && len(o.PreRelease) > 0 && v.PreRelease > o.PreRelease {
+	// compare non empty pre-release
+	if numEqual(v, o) && len(v.PreRelease) > 0 && len(o.PreRelease) > 0 && strings.Compare(v.PreRelease, o.PreRelease) == 1 {
 		return 1
 	}
 	return -1

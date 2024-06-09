@@ -28,15 +28,22 @@ func ExampleCompare() {
 			1:  ">",
 		}
 		got, _ := Compare(a, b)
+
 		fmt.Printf("%s %s %s\n", a, op[got], b)
 	}
 	cmp("1.0", "0.9")
 	cmp("0.1", "0.2")
 	cmp("2.0", "2.0")
+	cmp("1.0.0-alpha", "1.0.0-beta")
+	cmp("1.0.0-rc1", "1.0.0-rc2")
+	cmp("1.0.0-rc1", "1.0.0-rc11")
 	// output:
 	// 1.0 > 0.9
 	// 0.1 < 0.2
 	// 2.0 = 2.0
+	// 1.0.0-alpha < 1.0.0-beta
+	// 1.0.0-rc1 < 1.0.0-rc2
+	// 1.0.0-rc1 < 1.0.0-rc11
 }
 
 func ExampleVersion_String() {
