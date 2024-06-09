@@ -40,12 +40,13 @@ func ExampleCompare() {
 }
 
 func ExampleVersion_String() {
-	v := MustParse("1.9.11-dev+SHA123")
-	fmt.Println(v.Major, v.Minor, v.Patch, v.PreRelease, v.Build)
-	fmt.Println(v.String())
+	fmt.Println(MustParse("v1.9").String())
+	fmt.Println(MustParse("2.0.0-alpha").String())
+	fmt.Println(MustParse("2.0.0-alpha+SHA1").String())
 	// output:
-	// 1 9 11 dev SHA123
-	// 1.9.11-dev+SHA123
+	// 1.9.0
+	// 2.0.0-alpha
+	// 2.0.0-alpha+SHA1
 }
 
 func TestParse(t *testing.T) {

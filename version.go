@@ -163,6 +163,8 @@ func (v *Version) setPatch(str string) error {
 	return nil
 }
 
+// String returns MAJOR.MINOR.PATCH[-pre-release[+build]] omitting any
+// prefix.
 func (v *Version) String() string {
 	var res []byte
 	res = fmt.Append(res, v.Major, ".", v.Minor, ".", v.Patch)
