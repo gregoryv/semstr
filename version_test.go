@@ -61,6 +61,9 @@ func TestParse(t *testing.T) {
 	bad("1.x.0")
 	bad("1.0.x")
 	bad("1.0.x-")
+	bad("1.0.1-")
+	bad("1.0.1-+SHA1")
+	bad("1.0.1-alpha+")
 	bad("x.0.0")
 }
 

@@ -50,9 +50,10 @@ func MustParse(in string) *Version {
 }
 
 // Parse returns a valid sematic version or an error.
-func Parse(in string) (*Version, error) {
+func Parse(str string) (*Version, error) {
+	in := str
 	if len(in) == 0 {
-		return nil, fmt.Errorf("empty")
+		return nil, &parseErr{str, "empty"}
 	}
 	var v Version
 	var err error
@@ -64,14 +65,14 @@ func Parse(in string) (*Version, error) {
 	if i == -1 {
 		v.Major, err = strconv.Atoi(in)
 		if err != nil {
-			return nil, err
+			return nil, &parseErr{str, "major invalid"}
 		}
 		return &v, nil
 	}
 
 	v.Major, err = strconv.Atoi(in[:i])
 	if err != nil {
-		return nil, err
+		return nil, &parseErr{str, "major invalid"}
 	}
 
 	// optional minor
@@ -80,13 +81,13 @@ func Parse(in string) (*Version, error) {
 	if i == -1 {
 		v.Minor, err = strconv.Atoi(in)
 		if err != nil {
-			return nil, err
+			return nil, &parseErr{str, "minor invalid"}
 		}
 		return &v, nil
 	}
 	v.Minor, err = strconv.Atoi(in[:i])
 	if err != nil {
-		return nil, err
+		return nil, &parseErr{str, "minor invalid"}
 	}
 
 	// optional patch
@@ -95,24 +96,35 @@ func Parse(in string) (*Version, error) {
 	if i == -1 {
 		v.Patch, err = strconv.Atoi(in)
 		if err != nil {
-			return nil, err
+			return nil, &parseErr{str, "patch invalid"}
 		}
 		return &v, nil
 	}
 	v.Patch, err = strconv.Atoi(in[:i])
 	if err != nil {
-		return nil, err
+		return nil, &parseErr{str, "patch invalid"}
 	}
 
 	// optional pre-release
 	in = in[i+1:]
 	i = strings.Index(in, "+")
 	if i == -1 {
+		if in == "" {
+			return nil, &parseErr{str, "pre-release missing"}
+		}
 		v.PreRelease = in
 		return &v, nil
 	}
 	v.PreRelease = in[:i]
+	if v.PreRelease == "" {
+		// e.g. -+
+		return nil, &parseErr{str, "pre-release missing"}
+	}
 	v.Build = in[i+1:]
+	if v.Build == "" {
+		// e.g. 1.0.1-dev+
+		return nil, &parseErr{str, "build missing"}
+	}
 	return &v, nil
 }
 
@@ -169,4 +181,13 @@ func (v *Version) Compare(o *Version) int {
 		return 1
 	}
 	return -1
+}
+
+type parseErr struct {
+	str  string
+	part string // major, minor or patch
+}
+
+func (e *parseErr) Error() string {
+	return fmt.Sprintf("Parse(%q): %s", e.str, e.part)
 }
