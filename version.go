@@ -17,6 +17,7 @@ import (
 	"strings"
 )
 
+// MustCompare is the same as [Compare] except it panics on error.
 func MustCompare(a, b string) int {
 	v, err := Compare(a, b)
 	if err != nil {
@@ -41,7 +42,7 @@ func Compare(a, b string) (int, error) {
 	return v.Compare(o), nil
 }
 
-// MustParse returns a valid version or panics.
+// MustParse is the same as [Parse] except it panics on error.
 func MustParse(in string) *Version {
 	v, err := Parse(in)
 	if err != nil {
@@ -50,7 +51,7 @@ func MustParse(in string) *Version {
 	return v
 }
 
-// Parse returns a valid sematic version or an error.
+// Parse returns a valid version or an error.
 func Parse(str string) (*Version, error) {
 	in := str
 	if len(in) == 0 {
